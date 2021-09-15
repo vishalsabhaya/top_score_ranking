@@ -1,0 +1,29 @@
+# PostgreSQL. Versions 9.3 and up are supported.
+#
+default: &default
+  adapter: postgresql
+  encoding: utf8
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: <%= ENV.fetch('RAILS_MAX_THREADS') { 5 } %>
+  username: <%= ENV.fetch('DB_USER', 'postgres') %>
+  password: <%= ENV.fetch('DB_PASSWORD', 'postgres') %>
+  host: <%= ENV.fetch('DB_HOST', '127.0.0.1') %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: top_score_ranking_development
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+test:
+  <<: *default
+  database: top_score_ranking_test
+
+#   production:
+production:
+  <<: *default
+  database: top_score_ranking_production
+  username: top_score_ranking
+  password: <%= ENV['TOP_SCORE_RANKING_DATABASE_PASSWORD'] %>
