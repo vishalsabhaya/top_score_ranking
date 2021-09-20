@@ -5,6 +5,17 @@ module Api
     before_action :set_score, only: %i[show destroy]
 
     def index
+      search = Scores::ListScore.new(search_params)
+
+      if search.valid?
+        scores = search.call
+
+        render json: scores,
+               include: search.include_in_serializer,
+               meta: { total_count: search.total_count }
+      else
+        render ModelInvalidError.to_response(search)
+      end
     end
 
     def show
@@ -36,5 +47,10 @@ module Api
     def set_score
       @score = Score.find(params[:id])
     end
+
+    def search_params
+      params.permit(:name, :from_score_date, :to_score_date, :limit, :offset)
+    end
+
   end
 end
